@@ -4,7 +4,7 @@
 
 using namespace std;
 
-// https://leetcode.com/problems/insert-into-a-binary-search-tree
+// https://leetcode.com/problems/binary-tree-inorder-traversal
 struct TreeNode {
     int val;
     // Each Treenode is a branch
@@ -35,65 +35,47 @@ class Solution{
             return root;
         }
 
-        TreeNode* buildBST(const vector<int>& nums, int val) {
+        TreeNode* buildBST(const vector<int>& nums) {
             // Build the initial tree.
             TreeNode* root = nullptr;
             for (int val: nums){
                 root = insertIntoBST(root, val);
             }
 
-            // Add the value.
-            root = insertIntoBST(root, val);
-
             // Print the level order traversal of the BST for debug.
-            levelOrder(root);
-            cout << endl;
+            vector<int> vals = this->inorderTransveral(root);
 
             return root;
         }
 
-        void levelOrder(TreeNode* root) {
-            // If reach branch end, return.
-            if (!root) {
-                cout << " null ";
-                return;
+        // Follow the left branch down first.
+        void inorder(TreeNode* root, vector<int>& out){
+                if (!root) return;
+                inorder(root->left,out);
+                out.push_back(root->val);
+                inorder(root->right,out);
             }
 
-            // FIFO order
-            queue<TreeNode*> q;
-            q.push(root);
+        vector<int> inorderTransveral(TreeNode* root){
+            vector<int> order_tree {};
+            this->inorder(root, order_tree);
 
-            // Breaking apart tree top level down.
-            while (!q.empty()) {
-                TreeNode* cur = q.front();
-                q.pop();
-
-                if (cur) {
-                    cout << cur->val << " ";
-                    q.push(cur->left);   // push even if null
-                    q.push(cur->right);  // push even if null
-                } else {
-                    cout << " null ";
-                }
-
-            }
+            for (auto val:order_tree){
+                cout << val << " ";
+            }        
+            cout << endl;
+            
+            return order_tree;
         }
+        
 };
 
 int main() {
     Solution sol;
 
     // test 1
-    vector<int> tree_cfg = {4,2,7,1,3};
-    sol.buildBST(tree_cfg, 5);
-
-    // test 2
-    tree_cfg = {40,20,60,10,30,50,70};
-    sol.buildBST(tree_cfg, 25);
-
-    // test 3
-    tree_cfg = {4,2,7,1,3};
-    sol.buildBST(tree_cfg, 5);
+    vector<int> tree_cfg = {1,2,3,5,1,6,1,4,2,10,50,30};
+    sol.buildBST(tree_cfg);
 
     return 0;
 }
