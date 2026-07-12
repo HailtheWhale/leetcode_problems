@@ -4,14 +4,15 @@
 
 using namespace std;
 
+// https://leetcode.com/problems/course-schedule
 class Solution{
     public:
+        // depth first search
         bool dfs(int course, vector<vector<int>>& graph, vector<int>& state){
-            if (state[course] == 1) return false; // cycle
+            if (state[course] == 1) return false; // if checking node already visiting, cycle present. break everything.
             if (state[course] == 2) return true; // already checked
             
             state[course] = 1; // visiting
-
             for (int next : graph[course]){
                 if (!dfs(next, graph, state)) return false;
             }
@@ -21,30 +22,22 @@ class Solution{
         }
 
         bool canFinish(int numCourses, vector<vector<int>>& prerequisites){
+            // numCourses tells how many courses in play and need to keep track of.
             vector<vector<int>> graph(numCourses);
 
-            // Build the graph
+            // Map the prereqs to the courses.
             for (auto& p : prerequisites){
                 // Each p is a pair of vals.
                 graph[p[1]].push_back(p[0]);
             }
 
-            cout << "Graph contents: " << endl;
-            for (auto& i: graph){
-                for (auto& j: i){
-                    cout << j << " ";
-                }
-            }
-            cout << endl;
-
+            // Make a state for each course to check if it is safe from inf loop.
             vector<int> state(numCourses, 0);
-
-            // Run DFS on every course
+            // May have multiple disjointed prereqs.
             for (int course = 0; course < numCourses; course++){
                 if (!dfs(course, graph, state)) return false;
             }
             return true;
-
         }
 };
 
