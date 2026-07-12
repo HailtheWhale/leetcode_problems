@@ -11,20 +11,19 @@ class Solution{
             // Convert the magazine to letters that can be sorted.
             unordered_multiset<char> mag_pieces{};
             cout << "Letters available: ";
-            for (auto& letter: magazine){
+            for (char letter: magazine){
                 cout << letter << " ";
                 mag_pieces.insert(letter);
             }
             cout << endl;
 
             cout << "Ransom Note: " << ransomNote << endl;
-            for (auto& letter: ransomNote){
+            for (char letter: ransomNote){
                 // Check if the letter exists in the pieces available.
-                if (!mag_pieces.count(letter)) {
-                    return false;
-                }
+                auto it = mag_pieces.find(letter);
+                if (it == mag_pieces.end()) return false;
                 // If it does, then we remove a letter.
-                mag_pieces.erase(mag_pieces.find(letter));
+                mag_pieces.erase(it);
             }
             // If can get through the entire ransom letter, then can be decoded.
             return true;
